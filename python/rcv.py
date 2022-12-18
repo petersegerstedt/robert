@@ -29,8 +29,8 @@ def on_time(data):
     ts, = struct.unpack('d', data[8:])
     print(ts, datetime.utcfromtimestamp(ts))
 while True:
-    data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
-    cmd = data[:4].decode('ascii')
+    buf, addr = sock.recvfrom(512) # buffer size is 512 bytes
+    cmd, data = buf[:4].decode('ascii'), buf[4:]
 
     if 'TIME' == cmd:
         on_time(data[4:])
