@@ -3,7 +3,8 @@ import cv2
 import numpy as np
 import sys
 image = cv2.imread(sys.argv[1])
-image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+image = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
+image = cv2.blur(image,(2,2))
 # reshape the image to a 2D array of pixels and 3 color values (RGB)
 pixel_values = image.reshape((-1, 3))
 # convert to float
@@ -15,14 +16,17 @@ criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.2)
 k = 3
 _, labels, (centers) = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
 
+print(centers)
+#print(cv2.cvtColor(centers, cv2.COLOR_LAB2RGB))
 # convert back to 8 bit values
 centers = np.uint8(centers)
 
 # flatten the labels array
 labels = labels.flatten()
 
+
 # convert all pixels to the color of the centroids
-segmented_image = centers[labels.flatten()].reshape(image.shape)
+segmented_image = cv2.cvtColor(centers[labels].reshape(image.shape), cv2.COLOR_YCrCb2BGR)
 cv2.imshow('img', segmented_image)
 cv2.waitKey()
 
