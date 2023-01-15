@@ -33,5 +33,5 @@ while True:
     cmd, data = buf[:4].decode('ascii'), buf[4:]
 
     if 'TIME' == cmd:
-        on_time(data[4:])
+        on_time(data)
     time.sleep(0.1)
